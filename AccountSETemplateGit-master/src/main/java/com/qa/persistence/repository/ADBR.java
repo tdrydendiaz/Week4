@@ -1,10 +1,12 @@
 package com.qa.persistence.repository;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.enterprise.inject.Default;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
@@ -16,7 +18,8 @@ import com.qa.util.JSONUtil;
 @Default
 public class ADBR implements AccountRepository {
 	
-	
+	@Inject
+	private JSONUtil util;
  
 	@PersistenceContext(unitName="primary")
 	private EntityManager manager;
@@ -31,10 +34,14 @@ public class ADBR implements AccountRepository {
 	}
 
 	
+	
 	@Override
 	public String getAllAccounts() {
-		TypedQuery<Account> query = manager.createQuery("SELECT a FROM ACCOUNT a ORDER BY a.id DESC", Account.class);
-		return query.getResultList().toString();
+		Query query = manager.createQuery("SELECT a FROM Account a ORDER BY accountNumber");
+
+		Collection<Account> accounts = (Collection<Account>) query.getResultList();
+
+		return util.getJSONForObject(accounts);
 	}
 	
 	public String findAnAccount(int accountNumber) {
@@ -66,6 +73,4 @@ public class ADBR implements AccountRepository {
 		
 		return null;
 	}
-	
-	
 }
