@@ -34,7 +34,7 @@ public class AccountMapRepository implements AccountRepository{
 
 	public String deleteAccount(int accountNumber) {
 		accountMap.remove((Integer)accountNumber);
-		return "Account successfully removed";
+		return "Account successfully removed"; 
 	}
 
 	public String updateAccount(int accountNumber, String account) {
